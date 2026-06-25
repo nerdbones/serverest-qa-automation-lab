@@ -1,4 +1,5 @@
 import { buildUser } from '../../support/data-factory'
+import { obterApiUrl } from '../../support/commands/api/api.helpers'
 
 describe('API - Gestão de usuários', () => {
   let usuario
@@ -40,7 +41,7 @@ describe('API - Gestão de usuários', () => {
     cy.registrarEtapa('E a API deve impedir cadastro duplicado com o mesmo e-mail')
     cy.request({
       method: 'POST',
-      url: `${Cypress.expose('apiUrl')}/usuarios`,
+      url: `${obterApiUrl()}/usuarios`,
       body: usuario,
       failOnStatusCode: false,
     }).then((response) => {

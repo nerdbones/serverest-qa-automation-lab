@@ -2,12 +2,14 @@ const { defineConfig } = require('cypress')
 const fs = require('fs')
 
 module.exports = defineConfig({
+  allowCypressEnv: false,
+
+  expose: {
+    apiUrl: process.env.CYPRESS_API_URL || 'https://serverest.dev',
+  },
+
   e2e: {
     baseUrl: process.env.CYPRESS_FRONTEND_URL || 'https://front.serverest.dev',
-
-    env: {
-      apiUrl: process.env.CYPRESS_API_URL || 'https://serverest.dev',
-    },
 
     specPattern: 'cypress/e2e/**/*.cy.js',
     supportFile: 'cypress/support/e2e.js',
