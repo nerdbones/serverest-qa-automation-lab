@@ -1,6 +1,10 @@
 import { buildProduct, buildUser } from '../../support/data-factory'
 
 describe('API - Produto e carrinho', () => {
+  const usuariosCriados = []
+  const produtosCriados = []
+  const clienteTokens = []
+
   let admin
   let cliente
   let produto
@@ -9,55 +13,67 @@ describe('API - Produto e carrinho', () => {
   let produtoCriado
   let carrinhoCriado
 
-  before(() => {
+  beforeEach(() => {
+    admin = undefined
+    cliente = undefined
+    produtoCriado = undefined
+    carrinhoCriado = undefined
+    adminToken = undefined
+    clienteToken = undefined
     produto = buildProduct({ nomePrefixo: 'Produto Carrinho API' })
 
     cy.registrarEtapa('Preparando administrador para cadastro de produto')
     cy.criarUsuarioApi(buildUser({ administrador: 'true', nomePrefixo: 'Admin API' })).then(
       (createdAdmin) => {
         admin = createdAdmin
+        usuariosCriados.push(createdAdmin)
       }
     )
 
-    cy.then(() => cy.autenticarUsuarioApi(admin, { validarSucesso: true })).then((response) => {
+    cy.then(() => cy.aguardarUsuarioAutenticavelApi(admin)).then((response) => {
       adminToken = response.body.authorization
     })
 
     cy.registrarEtapa('Preparando produto para uso no carrinho')
     cy.then(() => cy.criarProdutoApi(adminToken, produto)).then((createdProduct) => {
       produtoCriado = createdProduct
+      produtosCriados.push(createdProduct)
     })
 
     cy.registrarEtapa('Preparando cliente para montagem do carrinho')
     cy.then(() => cy.criarUsuarioApi(buildUser({ nomePrefixo: 'Cliente API' }))).then(
       (createdClient) => {
         cliente = createdClient
+        usuariosCriados.push(createdClient)
       }
     )
 
-    cy.then(() => cy.autenticarUsuarioApi(cliente, { validarSucesso: true })).then((response) => {
+    cy.then(() => cy.aguardarUsuarioAutenticavelApi(cliente)).then((response) => {
       clienteToken = response.body.authorization
+      clienteTokens.push(clienteToken)
     })
   })
 
   after(() => {
-    cy.registrarEtapa('Limpando carrinho, produto e usuários criados durante o cenário')
+    cy.registrarEtapa('Limpando carrinhos, produtos e usuários criados durante o cenário')
 
-    if (clienteToken) {
-      cy.cancelarCarrinhoApi(clienteToken, { validarSucesso: false })
-    }
+    cy.wrap(clienteTokens, { log: false }).each((token) => {
+      if (token) {
+        cy.cancelarCarrinhoApi(token, { validarSucesso: false })
+      }
+    })
 
-    if (adminToken && produtoCriado?._id) {
-      cy.excluirProdutoApi(adminToken, produtoCriado._id)
-    }
+    cy.wrap(produtosCriados, { log: false }).each((produtoParaExcluir) => {
+      if (adminToken && produtoParaExcluir?._id) {
+        cy.excluirProdutoApi(adminToken, produtoParaExcluir._id)
+      }
+    })
 
-    if (cliente?._id) {
-      cy.excluirUsuarioApi(cliente._id)
-    }
-
-    if (admin?._id) {
-      cy.excluirUsuarioApi(admin._id)
-    }
+    cy.wrap(usuariosCriados, { log: false }).each((usuarioCriado) => {
+      if (usuarioCriado?._id) {
+        cy.excluirUsuarioApi(usuarioCriado._id)
+      }
+    })
   })
 
   it('deve criar produto como administrador, montar carrinho como cliente e cancelar compra', () => {

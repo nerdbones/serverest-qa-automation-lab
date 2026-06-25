@@ -102,3 +102,9 @@ Os blocos `after` são usados para limpeza best-effort dos dados criados durante
 - **Commands por contexto:** diminui duplicação e melhora legibilidade.
 - **Logs de etapa:** tornam a execução mais rastreável no terminal e no CI.
 - **Limpeza pós-teste:** remove dados criados sempre que a API permite.
+
+## Estabilização de usuários recém-criados
+
+Como a aplicação e a API públicas podem apresentar pequenas variações de tempo entre o cadastro e a autenticação de usuários recém-criados, os commands de autenticação possuem retentativa controlada. Essa abordagem reduz falsos negativos sem mascarar falhas reais: após o número máximo de tentativas, a resposta final continua sendo validada com mensagem de erro explícita.
+
+O login pela interface também possui retentativa controlada quando a API responde temporariamente com erro de autenticação. A validação final continua exigindo status `200` e redirecionamento para a rota esperada do perfil autenticado.

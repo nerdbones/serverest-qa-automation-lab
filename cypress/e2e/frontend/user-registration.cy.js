@@ -1,27 +1,28 @@
 import { buildUser } from '../../support/data-factory'
 
 describe('Frontend - Cadastro de cliente', () => {
+  const emailsGerados = []
   let usuario
   let usuarioCriado
 
-  before(() => {
+  beforeEach(() => {
     usuario = buildUser({ nomePrefixo: 'Cliente Front' })
+    usuarioCriado = undefined
+    emailsGerados.push(usuario.email)
   })
 
   after(() => {
-    cy.registrarEtapa('Limpando cliente cadastrado durante o cenário')
+    cy.registrarEtapa('Limpando clientes cadastrados durante o cenário')
 
-    if (usuarioCriado?._id) {
-      cy.excluirUsuarioApi(usuarioCriado._id)
-    } else if (usuario?.email) {
-      cy.consultarUsuariosPorEmailApi(usuario.email).then((response) => {
+    cy.wrap(emailsGerados, { log: false }).each((email) => {
+      cy.consultarUsuariosPorEmailApi(email).then((response) => {
         const usuarioEncontrado = response.body.usuarios?.[0]
 
         if (usuarioEncontrado?._id) {
           cy.excluirUsuarioApi(usuarioEncontrado._id)
         }
       })
-    }
+    })
   })
 
   it('deve cadastrar cliente pela interface e redirecionar para a área logada', () => {

@@ -1,24 +1,28 @@
 import { buildUser, credenciaisInvalidas } from '../../support/data-factory'
 
 describe('API - Autenticação de usuários', () => {
+  const usuariosCriados = []
   let usuario
-  let usuarioCriado
 
-  before(() => {
+  beforeEach(() => {
     usuario = buildUser({ nomePrefixo: 'Usuário Auth' })
 
     cy.registrarEtapa('Preparando usuário para validação de autenticação')
     cy.criarUsuarioApi(usuario).then((createdUser) => {
-      usuarioCriado = createdUser
+      usuariosCriados.push(createdUser)
     })
+
+    cy.then(() => cy.aguardarUsuarioAutenticavelApi(usuario))
   })
 
   after(() => {
-    cy.registrarEtapa('Limpando usuário criado durante o cenário')
+    cy.registrarEtapa('Limpando usuários criados durante o cenário')
 
-    if (usuarioCriado?._id) {
-      cy.excluirUsuarioApi(usuarioCriado._id)
-    }
+    cy.wrap(usuariosCriados, { log: false }).each((usuarioCriado) => {
+      if (usuarioCriado?._id) {
+        cy.excluirUsuarioApi(usuarioCriado._id)
+      }
+    })
   })
 
   it('deve autenticar credenciais válidas e rejeitar tentativa com senha inválida', () => {
