@@ -31,7 +31,8 @@ Não foram incluídos neste projeto:
 - Todos os testes automatizados passando.
 - `npm run lint` sem erros.
 - `npm run format:check` sem divergências.
-- Evidências disponíveis em vídeos, screenshots de falha e logs de pipeline.
+- `npm audit --audit-level=high` sem vulnerabilidades críticas ou altas.
+- Evidências disponíveis em vídeos de falha, screenshots de falha e logs de pipeline.
 
 ## Massa de dados
 
@@ -39,11 +40,19 @@ A massa é gerada dinamicamente a cada execução, reduzindo dependência de dad
 
 Usuários e produtos criados pela automação usam prefixos identificáveis, mas com sufixos únicos baseados em timestamp e caracteres aleatórios.
 
+## Estratégia de preparação
+
+Os cenários usam `before` para preparar pré-condições, como criação de usuários, autenticação e cadastro de produtos necessários para o fluxo.
+
+Essa abordagem deixa o corpo do teste mais focado na ação principal e nas assertivas de negócio.
+
 ## Estratégia de limpeza
 
-Sempre que possível, os cenários removem usuários e produtos criados durante a execução.
+Sempre que possível, os cenários usam `after` para remover usuários e produtos criados durante a execução.
 
 No caso de carrinhos, a automação cancela a compra para liberar o usuário e reabastecer o estoque do produto.
+
+A limpeza é tratada como best-effort, pois o ambiente é público e pode responder de forma diferente quando uma pré-condição não foi criada ou já foi removida.
 
 ## Riscos e mitigação
 

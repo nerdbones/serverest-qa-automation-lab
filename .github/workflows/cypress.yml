@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  cypress-run:
-    name: Executar testes automatizados
+  quality-gates:
+    name: Validar qualidade estática
     runs-on: ubuntu-24.04
     timeout-minutes: 10
 
@@ -38,14 +38,44 @@ jobs:
       - name: Validar qualidade estática
         run: npm run lint
 
-      - name: Executar testes Cypress
-        run: npm run cy:run
+  cypress-tests:
+    name: Executar testes Cypress - ${{ matrix.test-group.name }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    needs: quality-gates
 
-      - name: Publicar evidências da execução
+    strategy:
+      fail-fast: false
+      matrix:
+        test-group:
+          - name: API
+            command: npm run cy:run:api
+            artifact-name: evidencias-cypress-api
+          - name: Frontend
+            command: npm run cy:run:frontend
+            artifact-name: evidencias-cypress-frontend
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v6
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Executar testes Cypress - ${{ matrix.test-group.name }}
+        run: ${{ matrix.test-group.command }}
+
+      - name: Publicar evidências da execução - ${{ matrix.test-group.name }}
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: evidencias-cypress
+          name: ${{ matrix.test-group.artifact-name }}
           path: |
             cypress/videos
             cypress/screenshots

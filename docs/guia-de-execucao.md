@@ -62,4 +62,9 @@ O workflow é acionado em:
 - pull request para `main`;
 - execução manual via `workflow_dispatch`.
 
-Ao final da execução, vídeos e screenshots são publicados como artefatos quando existirem.
+A execução no CI possui dois momentos:
+
+1. validações estáticas e de segurança: `npm audit`, Prettier e ESLint;
+2. execução paralelizada dos testes Cypress em dois grupos: API e frontend.
+
+Ao final da execução, vídeos de falha e screenshots são publicados como artefatos quando existirem.

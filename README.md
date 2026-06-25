@@ -40,6 +40,10 @@ O ServeRest simula uma loja virtual e disponibiliza recursos de usuários, auten
 - Prettier
 - GitHub Actions
 
+## Decisão sobre ambiente de CI
+
+O pipeline utiliza `ubuntu-24.04` por simplicidade, previsibilidade e compatibilidade com GitHub Actions. Para suítes maiores ou ambientes com necessidade de maior controle de browsers e dependências, o projeto pode evoluir para execução em imagens Docker oficiais do Cypress, como `cypress/included` ou `cypress/browsers`.
+
 ## Pré-requisitos
 
 - Node.js 22 ou superior compatível.
@@ -128,7 +132,7 @@ serverest-qa-automation-lab/
 ├── cypress/e2e/api/           # Cenários automatizados de API
 ├── cypress/e2e/frontend/      # Cenários automatizados E2E de frontend
 ├── cypress/fixtures/          # Dados estáticos de apoio
-├── cypress/support/           # Comandos customizados e massa dinâmica
+├── cypress/support/           # Commands por contexto, configuração global e massa dinâmica
 ├── docs/                      # Documentação complementar do projeto
 ├── cypress.config.js          # Configuração principal do Cypress
 ├── eslint.config.js           # Configuração de análise estática
@@ -151,10 +155,10 @@ A documentação detalhada está organizada no diretório `docs/`:
 
 O projeto usa os recursos nativos do Cypress para gerar evidências:
 
-- vídeos das execuções headless;
+- vídeos apenas em falhas de specs;
 - screenshots automáticos em falha;
-- logs detalhados no terminal;
-- artefatos publicados no GitHub Actions.
+- logs detalhados no terminal, incluindo etapas dos cenários;
+- artefatos separados por camada no GitHub Actions.
 
 ## CI/CD
 
@@ -163,16 +167,16 @@ O workflow `.github/workflows/cypress.yml` executa:
 1. instalação das dependências com `npm ci`;
 2. validação de formatação;
 3. validação estática com ESLint;
-4. execução dos testes Cypress;
-5. publicação de vídeos e screenshots como artefatos.
+4. execução paralelizada dos testes Cypress por camada: API e frontend;
+5. publicação de vídeos de falha e screenshots como artefatos.
 
 ## Decisões de qualidade
 
 - Massa de dados dinâmica para reduzir colisões no ambiente compartilhado.
 - Separação entre testes de API e frontend.
-- Comandos customizados para reduzir duplicação.
+- Commands customizados organizados por contexto para reduzir duplicação e melhorar manutenção.
 - Assertivas explícitas para status HTTP, mensagens, dados persistidos e redirecionamentos.
-- Limpeza de dados criados durante a automação sempre que aplicável.
+- Uso de `before` para preparação de massa e `after` para limpeza best-effort dos dados criados.
 - Ausência de dependências de relatório vulneráveis ou desnecessárias.
 
 ## Observações

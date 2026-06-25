@@ -28,10 +28,13 @@ Os cenários foram escolhidos com base em:
 - Dados gerados dinamicamente com Faker.
 - Isolamento entre cenários.
 - Criação de pré-condições via API para acelerar testes de frontend.
+- Uso de `before` para preparação controlada de massa.
+- Uso de `after` para limpeza best-effort dos dados criados.
 - Assertivas explícitas e legíveis.
 - Organização por domínio técnico: `api` e `frontend`.
-- Reutilização por comandos customizados em `cypress/support`.
-- Pipeline de CI com lint, formatação, execução e publicação de evidências.
+- Commands customizados separados por contexto: API, UI e evidência.
+- Logs de etapa para melhorar rastreabilidade no terminal e no CI.
+- Pipeline com validações estáticas, execução paralelizada por camada e publicação de evidências.
 
 ## Riscos conhecidos
 

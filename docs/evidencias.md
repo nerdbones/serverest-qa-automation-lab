@@ -13,7 +13,9 @@ cypress/screenshots/
 
 ## Vídeos
 
-Os vídeos são gerados para as specs executadas em modo headless. Eles ajudam a analisar a jornada executada, principalmente em falhas intermitentes.
+Os vídeos são habilitados no Cypress, mas o projeto remove automaticamente os vídeos das specs que passam sem falha.
+
+Com isso, vídeos ficam disponíveis apenas quando existe falha, reduzindo ruído, tamanho dos artefatos e custo de análise.
 
 ## Screenshots
 
@@ -25,15 +27,21 @@ A saída do Cypress no terminal exibe:
 
 - specs executadas;
 - testes aprovados e reprovados;
+- etapas registradas com `cy.registrarEtapa()`;
 - tempo de execução;
 - mensagens de erro;
 - stack traces úteis para diagnóstico.
 
 ## Evidências no CI
 
-No GitHub Actions, o workflow publica vídeos e screenshots como artefato chamado `cypress-evidences`.
+No GitHub Actions, o workflow publica vídeos e screenshots como artefatos quando existirem.
 
-Esse artefato permite análise posterior mesmo quando a execução ocorre fora da máquina local.
+Como os testes de API e frontend rodam em jobs separados, os artefatos também são separados:
+
+- `evidencias-cypress-api`;
+- `evidencias-cypress-frontend`.
+
+Essa separação facilita a análise quando uma falha acontece em apenas uma camada da automação.
 
 ## Observação sobre relatórios externos
 
