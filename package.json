@@ -1,0 +1,36 @@
+{
+  "name": "serverest-qa-automation-lab",
+  "version": "1.0.0",
+  "description": "Projeto de portfólio para automação de testes E2E e API com Cypress e JavaScript usando a aplicação pública ServeRest.",
+  "main": "index.js",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:frontend": "cypress run --spec 'cypress/e2e/frontend/**/*.cy.js'",
+    "cy:run:api": "cypress run --spec 'cypress/e2e/api/**/*.cy.js'",
+    "lint": "eslint cypress.config.js eslint.config.js cypress/**/*.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean:artifacts": "rimraf cypress/videos cypress/screenshots",
+    "test": "npm run cy:run"
+  },
+  "keywords": [
+    "qa",
+    "cypress",
+    "javascript",
+    "e2e",
+    "api-testing",
+    "serverest",
+    "portfolio"
+  ],
+  "author": "Thiago David",
+  "license": "MIT",
+  "devDependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "cypress": "^15.18.0",
+    "eslint": "^10.5.0",
+    "eslint-plugin-cypress": "^6.4.1",
+    "prettier": "^3.8.4",
+    "rimraf": "^6.1.3"
+  }
+}

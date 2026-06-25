@@ -1,0 +1,8 @@
+{
+  "passwordPadrao": "Teste@12345",
+  "produtoBase": {
+    "preco": 149,
+    "descricao": "Produto criado automaticamente para validação de fluxo crítico.",
+    "quantidade": 12
+  }
+}
