@@ -1,7 +1,7 @@
 {
   "name": "serverest-qa-automation-lab",
   "version": "1.0.0",
-  "description": "Projeto de portfólio para automação de testes E2E e API com Cypress e JavaScript usando a aplicação pública ServeRest.",
+  "description": "Projeto de automação de testes E2E e API com Cypress e JavaScript usando a aplicação pública ServeRest.",
   "main": "index.js",
   "scripts": {
     "cy:open": "cypress open",
