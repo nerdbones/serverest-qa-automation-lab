@@ -1,5 +1,6 @@
 # Serverest QA Automation Lab
 
+[![Cypress Quality Pipeline](https://github.com/nerdbones/serverest-qa-automation-lab/actions/workflows/cypress.yml/badge.svg)](https://github.com/nerdbones/serverest-qa-automation-lab/actions/workflows/cypress.yml)
 [![API ServeRest](https://img.shields.io/badge/API-ServeRest-green)](https://github.com/ServeRest/ServeRest/)
 [![Cypress](https://img.shields.io/badge/Testes-Cypress-17202C)](https://www.cypress.io/)
 [![JavaScript](https://img.shields.io/badge/Linguagem-JavaScript-yellow)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)

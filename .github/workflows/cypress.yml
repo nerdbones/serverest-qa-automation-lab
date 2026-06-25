@@ -7,23 +7,30 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   cypress-run:
     name: Executar testes automatizados
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
 
     steps:
       - name: Baixar código do repositório
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
 
       - name: Instalar dependências
         run: npm ci
+
+      - name: Validar vulnerabilidades críticas
+        run: npm audit --audit-level=high
 
       - name: Validar formatação
         run: npm run format:check
@@ -36,9 +43,9 @@ jobs:
 
       - name: Publicar evidências da execução
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
-          name: cypress-evidences
+          name: evidencias-cypress
           path: |
             cypress/videos
             cypress/screenshots
